@@ -270,7 +270,7 @@ class Api
 	{
 		$multiparts = [];
 		foreach ($data as $key => $value) {
-			$keyName = "{$prefix}[{$key}]";
+			$keyName = is_numeric($key) ? "{$prefix}[]" : "{$prefix}[{$key}]";
 			if (is_array($value)) {
 				$subItems = $this->processSubItems($keyName, $value);
 				$multiparts = array_merge($multiparts, $subItems);
@@ -278,7 +278,7 @@ class Api
 			}
 
 			$multiparts[] = [
-				'name' => "{$prefix}[{$key}]",
+				'name' => $keyName,
 				'contents' => $value,
 			];
 		}

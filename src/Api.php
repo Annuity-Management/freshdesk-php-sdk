@@ -228,11 +228,17 @@ class Api
 			}
 
 			$multiparts = [];
-			foreach($attachments as $attachment) {
-				$multiparts[] = [
+			foreach($attachments as $fileName => $attachment) {
+				$item = [
 					'name' => 'attachments[]',
 					'contents' => $attachment, // $attachment is a resource from fopen('/path/to/file', 'r')
 				];
+
+				if (is_string($fileName)) {
+					$item['filename'] = $fileName;
+				}
+
+				$multiparts[] = $item;
 			}
 			foreach($data as $key => $value) {
 				if (is_array($value)) {

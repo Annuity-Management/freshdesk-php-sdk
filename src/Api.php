@@ -235,6 +235,12 @@ class Api
 				];
 			}
 			foreach($data as $key => $value) {
+				if (is_array($value)) {
+					$subItems = $this->processSubItems($key, $value);
+					$multiparts += $subItems;
+					continue;
+				}
+
 				$multiparts[] = [
 					'name' => $key,
 					'contents' => $value,
@@ -258,7 +264,26 @@ class Api
         $url = $this->baseUrl . $endpoint;
 
         return $this->performRequest($method, $url, $options);
-    }
+	}
+
+	private function processSubItems(string $prefix, array $data)
+	{
+		$multiparts = [];
+		foreach ($data as $key => $value) {
+			$keyName = "{$prefix}[{$key}]";
+			if (is_array($value)) {
+				$subItems = $this->processSubItems($keyName, $value);
+				$multiparts += $subItems;
+				continue;
+			}
+
+			$multiparts[] = [
+				'name' => "{$prefix}[{$key}]",
+				'contents' => $value,
+			];
+		}
+		return $multiparts;
+	}
 
     /**
      * Performs the request

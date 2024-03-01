@@ -237,7 +237,7 @@ class Api
 			foreach($data as $key => $value) {
 				if (is_array($value)) {
 					$subItems = $this->processSubItems($key, $value);
-					$multiparts += $subItems;
+					$multiparts = array_merge($multiparts, $subItems);
 					continue;
 				}
 
@@ -273,7 +273,7 @@ class Api
 			$keyName = "{$prefix}[{$key}]";
 			if (is_array($value)) {
 				$subItems = $this->processSubItems($keyName, $value);
-				$multiparts += $subItems;
+				$multiparts = array_merge($multiparts, $subItems);
 				continue;
 			}
 
